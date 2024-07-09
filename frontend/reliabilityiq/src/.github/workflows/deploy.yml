@@ -31,10 +31,10 @@ jobs:
       - name: Deploy to Heroku
         uses: akhileshns/heroku-deploy@v3.12.12
         with:
-          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_api_key: ${HRKU-e949f26c-6427-45a7-9e8b-21b37b8db6bc}
           heroku_app_name: "reliabilityiq" 
-          heroku_email: ${{ secrets.HEROKU_EMAIL }}
-          used_node: true
+          heroku_email: ${ rufusemare@gmail.com }
+      
           buildpack: heroku/nodejs
           branch: main
           region: us

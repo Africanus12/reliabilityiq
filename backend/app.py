@@ -1,16 +1,20 @@
+# app.py
 from flask import Flask, request, jsonify, send_file
-import openai
-import pandas as pd
-from docx import Document
+import openai # type: ignore
+import pandas as pd # type: ignore
+from docx import Document # type: ignore
 import json
-import matplotlib.pyplot as plt
-import pdfkit
+import matplotlib.pyplot as plt # type: ignore
+import pdfkit # type: ignore
 import os
+from flask_sqlalchemy import SQLAlchemy # type: ignore
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///chats.db'
+db = SQLAlchemy(app)
 
 # Set your OpenAI API key here
-openai.api_key = 'your-openai-api-key'
+openai.api_key = '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'
 
 # Firebase configuration and initialization
 firebaseConfig = {
@@ -22,6 +26,25 @@ firebaseConfig = {
   "appId": "1:104501551043:web:7ef9bed841151eafefe776",
   "measurementId": "G-N2M5E7Q133"
 }
+
+# Chat model for SQLAlchemy
+class Chat(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    messages = db.Column(db.Text, nullable=False)
+
+@app.route('/api/chats', methods=['GET'])
+def get_chats():
+    chats = Chat.query.all()
+    return jsonify([{'id': chat.id, 'messages': chat.messages} for chat in chats])
+
+@app.route('/api/chats/<int:chat_id>', methods=['DELETE'])
+def delete_chat(chat_id):
+    chat = Chat.query.get(chat_id)
+    if chat is None:
+        return jsonify({'error': 'Chat not found'}), 404
+    db.session.delete(chat)
+    db.session.commit()
+    return jsonify({'message': 'Chat deleted successfully'}), 200
 
 def analyze_csv(file_path):
     df = pd.read_csv(file_path)
@@ -174,5 +197,10 @@ def create_visualization_endpoint():
     return send_file(plot_path, mimetype='image/png')
 
 if __name__ == '__main__':
+    db.create_all()
     app.run(debug=True)
+
+
+
+
 
