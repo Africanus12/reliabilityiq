@@ -1,0 +1,9 @@
+# Ignore venv environment directory
+venv/
+
+# Ignore .env file containing sensitive information
+.env
+
+# Ignore logs and temporary files
+logs/
+temp/
