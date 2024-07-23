@@ -1,0 +1,17 @@
+{
+    "environments": {
+      "test": {
+        "scripts": {
+          "test-setup": "npm install",
+          "test": "npm test"
+        },
+        "addons": [
+          "heroku-postgresql"
+        ],
+        "env": {
+          "CI": "true"
+        }
+      }
+    }
+  }
+  
